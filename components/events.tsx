@@ -40,7 +40,15 @@ export default function Events() {
             </div>
             <div className="flex items-center gap-2">
               <Link className="text-ink-200 underline" href={googleCalendarLink(e)}>Add to Google</Link>
-              <Link className="text-ink-200 underline" href={`/api/ics?eventId=${e.id}`}>Download .ics</Link>
+              <a
+  className="text-ember-400 hover:underline"
+  href={e.url}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View on {e.platform}
+</a>
+
             </div>
           </Card>
         ))}
