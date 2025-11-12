@@ -2,7 +2,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import SkipToContent from "@/components/skip-to-content";
 import AnnouncementBar from "@/components/announcement-bar";
-import Header from "@/components/header";
+import { Header } from "@/components/header";
 import Footer from "@/components/footer";
 
 export const metadata = {
