@@ -35,7 +35,15 @@ export default function Events() {
               <div className="text-ink-400 text-sm">{formatDateInTZ(e.startDate, "EEE, MMM d • h:mm a zzz")} &mdash; {formatDateInTZ(e.endDate, "EEE, MMM d • h:mm a zzz")}
 </div>
               <div className="mt-2 text-sm">
-                <Link className="text-ember-400 hover:underline" href={e.url}>View on {e.platform}</Link>
+                <a
+  className="text-ember-400 hover:underline"
+  href={e.url}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  View on {e.platform}
+</a>
+
               </div>
             </div>
             <div className="flex items-center gap-2">
