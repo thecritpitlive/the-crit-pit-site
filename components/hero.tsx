@@ -19,9 +19,16 @@ export function Hero({ title, tag }: HeroProps) {
       <p className="mt-4 text-xl text-ink-300">{tag}</p>
 
       <div className="mt-8 flex items-center justify-center gap-4">
-        <Link href={upcoming?.url || siteConfig.socials.whatnot}>
-          <Button size="lg">Watch the next stream</Button>
-        </Link>
+        <Link
+  href={
+    upcoming?.url
+      ? { pathname: upcoming.url }
+      : { pathname: siteConfig.socials.whatnot }
+  }
+>
+  <Button size="lg">Watch the next stream</Button>
+</Link>
+
 
         <Link href="/links">
           <Button variant="outline" size="lg">

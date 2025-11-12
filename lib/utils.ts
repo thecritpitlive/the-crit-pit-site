@@ -7,13 +7,14 @@ export function cn(...classes: Array<string | false | null | undefined>) {
 
 // --- Stream event type used across components/libs ---
 export type StreamEvent = {
+  id: string; // ← add this line
   title: string;
-  platform: string;      // e.g., "Whatnot", "Twitch", etc.
-  url: string;           // absolute or internal URL
+  platform: string;
+  url: string;
   startDate: string | Date;
   endDate?: string | Date;
-  timezone?: string;     // IANA TZ like "America/Chicago"
-  whatnot_embed_url?: string; // <-- optional embed URL
+  timezone?: string;
+  whatnot_embed_url?: string;
 };
 
 // --- Simple helpers used by Events page ---

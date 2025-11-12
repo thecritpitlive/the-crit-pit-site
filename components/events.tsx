@@ -23,48 +23,57 @@ export default function Events() {
         <h2 className="text-2xl font-semibold">Streams</h2>
         <div className="flex gap-2">
           {filters.map(f => (
-            <Button key={f} variant={f===filter ? "default":"outline"} onClick={()=>setFilter(f)}>{f}</Button>
+            <Button key={f} variant={f===filter ? "default":"outline"} onClick={()=>setFilter(f)}>
+              {f}
+            </Button>
           ))}
         </div>
       </div>
+
       <div className="grid gap-4">
-        {list.map(e => (
-          <Card key={e.id} className="grid md:grid-cols-[1fr_auto] gap-4">
+        {list.map((e, i) => (
+          <Card key={e.id ?? i} className="grid md:grid-cols-[1fr_auto] gap-4">
             <div>
               <div className="font-semibold">{e.title}</div>
-              <div className="text-ink-400 text-sm">{formatDateInTZ(e.startDate, "EEE, MMM d • h:mm a zzz")} &mdash; {formatDateInTZ(e.endDate, "EEE, MMM d • h:mm a zzz")}
+
+              {/* FIXED: removed unsupported "zzz" */}
+              <div className="text-ink-400 text-sm">
+  {formatDateInTZ(e.startDate, "EEE, MMM d • h:mm a")}
+  &nbsp;—&nbsp;
+  {e.endDate ? formatDateInTZ(e.endDate, "EEE, MMM d • h:mm a") : ""}
 </div>
+
+
               <div className="mt-2 text-sm">
                 <a
-  className="text-ember-400 hover:underline"
-  href={e.url}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View on {e.platform}
-</a>
-
+                  className="text-ember-400 hover:underline"
+                  href={e.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View on {e.platform}
+                </a>
               </div>
             </div>
+
             <div className="flex items-center gap-2">
               <a
-  className="text-ink-200 underline"
-  href={googleCalendarLink(e)}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Add to Google
-</a>
+                className="text-ink-200 underline"
+                href={googleCalendarLink(e)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Add to Google
+              </a>
 
               <a
-  className="text-ember-400 hover:underline"
-  href={e.url}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  View on {e.platform}
-</a>
-
+                className="text-ember-400 hover:underline"
+                href={e.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on {e.platform}
+              </a>
             </div>
           </Card>
         ))}
