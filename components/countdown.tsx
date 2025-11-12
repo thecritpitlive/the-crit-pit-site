@@ -28,6 +28,7 @@ export default function Countdown() {
       <div className="text-2xl font-mono">{d}d {h}h {m}m {s}s</div>
       <div className="text-ink-400">
         ({formatDateInTZ(upcoming.startDate, "EEE, MMM d • h:mm a zzz")})
+
       </div>
     </div>
   );
