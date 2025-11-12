@@ -32,7 +32,8 @@ export default function Events() {
           <Card key={e.id} className="grid md:grid-cols-[1fr_auto] gap-4">
             <div>
               <div className="font-semibold">{e.title}</div>
-              <div className="text-ink-400 text-sm">{formatDateInTZ(e.startDate)} &mdash; {formatDateInTZ(e.endDate)}</div>
+              <div className="text-ink-400 text-sm">{formatDateInTZ(e.startDate, "EEE, MMM d • h:mm a zzz")} &mdash; {formatDateInTZ(e.endDate, "EEE, MMM d • h:mm a zzz")}
+</div>
               <div className="mt-2 text-sm">
                 <Link className="text-ember-400 hover:underline" href={e.url}>View on {e.platform}</Link>
               </div>
