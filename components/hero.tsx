@@ -1,37 +1,41 @@
+// components/hero.tsx
 "use client";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/site.config";
-import { getAllStreams } from "@/lib/streams";
-import { nextUpcomingEvent } from "@/lib/utils";
+
 import Link from "next/link";
+import type { Route } from "next";
+import { Button } from "@/components/ui/button";
+import { nextUpcomingEvent } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
-const TAGLINES = [
-  "Enter the Pit. Roll the Crit.",
-  "Where bad rolls go to die.",
-  "Math rocks for emotionally unstable adults.",
-  "Critical hits, questionable life choices.",
-  "Tabletop chaos. Minimum effort.",
-];
+type HeroProps = {
+  title: string;
+  tag: string;
+};
 
-export default function Hero() {
-  const [tag, setTag] = useState(TAGLINES[0]);
-  useEffect(() => {
-    const id = setInterval(() => {
-      setTag(t => TAGLINES[(TAGLINES.indexOf(t)+1) % TAGLINES.length]);
-    }, 3000);
-    return () => clearInterval(id);
-  }, []);
-
-  const upcoming = nextUpcomingEvent(getAllStreams());
+export default function Hero({ title, tag }: HeroProps) {
+  const upcoming = nextUpcomingEvent();
+  const watchHref = upcoming?.url ?? siteConfig.socials.whatnot;
+  const isInternal = typeof watchHref === "string" && watchHref.startsWith("/");
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-12 text-center">
-      <h1 className="font-display text-5xl md:text-7xl tracking-tight">The Crit Pit</h1>
+    <section className="flex flex-col items-center text-center py-16">
+      <h1 className="text-4xl md:text-6xl font-extrabold text-white">{title}</h1>
       <p className="mt-4 text-xl text-ink-300">{tag}</p>
+
       <div className="mt-8 flex items-center justify-center gap-4">
-        <Button asChild size="lg"><Link href={upcoming?.url || siteConfig.socials.whatnot}>Watch the next stream</Link></Button>
-        <Button asChild variant="outline" size="lg"><Link href="/links">Follow everywhere</Link></Button>
+        {isInternal ? (
+          <Link href={watchHref as Route}>
+            <Button size="lg">Watch the next stream</Button>
+          </Link>
+        ) : (
+          <a href={watchHref} target="_blank" rel="noopener noreferrer">
+            <Button size="lg">Watch the next stream</Button>
+          </a>
+        )}
+
+        <Link href={"/links" as Route}>
+          <Button variant="outline" size="lg">Follow everywhere</Button>
+        </Link>
       </div>
     </section>
   );
