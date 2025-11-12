@@ -1,0 +1,7 @@
+"use client";
+import { DefaultSeo } from "next-seo";
+import seo from "@/next-seo.config";
+
+export default function SEO() {
+  return <DefaultSeo {...seo} />;
+}

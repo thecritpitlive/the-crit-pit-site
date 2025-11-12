@@ -1,0 +1,8 @@
+module.exports = {
+  root: true,
+  extends: ["next/core-web-vitals"],
+  plugins: ["jsx-a11y"],
+  rules: {
+    "jsx-a11y/anchor-is-valid": "warn",
+  },
+};
