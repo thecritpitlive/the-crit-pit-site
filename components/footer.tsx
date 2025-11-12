@@ -19,8 +19,25 @@ export default function Footer() {
           <p className="text-ink-300 mt-2">Live deals • Stream-only bundles • Chaotic good vibes.</p>
         </div>
         <nav className="grid grid-cols-2 gap-2">
-          {LINKS.map(l => <Link key={l.href} href={l.href} className="text-ink-300 hover:text-white">{l.label}</Link>)}
-        </nav>
+  {LINKS.map((l) =>
+    l.href.startsWith("/") ? (
+      <Link key={l.href} href={l.href} className="text-ink-300 hover:text-white">
+        {l.label}
+      </Link>
+    ) : (
+      <a
+        key={l.href}
+        href={l.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-ink-300 hover:text-white"
+      >
+        {l.label}
+      </a>
+    )
+  )}
+</nav>
+
         <div className="text-sm text-ink-400">
           © {new Date().getFullYear()} {siteConfig.name}. Purchases happen off-site via our marketplaces.
         </div>
