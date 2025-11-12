@@ -3,32 +3,31 @@ import { useEffect, useState } from "react";
 import { getAllStreams } from "@/lib/streams";
 import { nextUpcomingEvent, formatDateInTZ } from "@/lib/utils";
 
-function diffParts(target: Date) {
-  const total = Math.max(0, target.getTime() - Date.now());
-  const d = Math.floor(total / (1000*60*60*24));
-  const h = Math.floor((total % (1000*60*60*24))/(1000*60*60));
-  const m = Math.floor((total % (1000*60*60))/(1000*60));
-  const s = Math.floor((total % (1000*60))/1000);
-  return { d,h,m,s,total };
-}
-
 export default function Countdown() {
-  const upcoming = nextUpcomingEvent(getAllStreams());
-  const [nowState, setNowState] = useState(Date.now());
+  const [now, setNow] = useState<Date>(new Date());
+  const events = getAllStreams();
+  const upcoming = nextUpcomingEvent(events);
+
   useEffect(() => {
-    const id = setInterval(() => setNowState(Date.now()), 1000);
+    const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
   if (!upcoming) return null;
-  const { d,h,m,s,total } = diffParts(upcoming.startDate);
-  const status = total <= 0 ? "Live Soon/Live Now" : "Next Stream";
+
+  const ms = Math.max(0, upcoming.startDate.getTime() - now.getTime());
+  const d = Math.floor(ms / 86_400_000);
+  const h = Math.floor((ms % 86_400_000) / 3_600_000);
+  const m = Math.floor((ms % 3_600_000) / 60_000);
+  const s = Math.floor((ms % 60_000) / 1_000);
+  const status = ms === 0 ? "Live Soon" : "Starts in";
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-4 text-center">
-      <div className="inline-flex items-center gap-3 rounded-2xl border border-ink-800 bg-ink-900/50 px-4 py-3">
-        <span className="text-ink-300">{status}:</span>
-        <span className="font-mono">{d}d {h}h {m}m {s}s</span>
-        <span className="text-ink-400">({formatDateInTZ(upcoming.startDate)})</span>
+    <div className="rounded-xl border border-ink-700 p-4 bg-ink-900">
+      <div className="text-sm text-ink-300">{status}</div>
+      <div className="text-2xl font-mono">{d}d {h}h {m}m {s}s</div>
+      <div className="text-ink-400">
+        ({formatDateInTZ(upcoming.startDate, "EEE, MMM d • h:mm a zzz")})
       </div>
     </div>
   );
