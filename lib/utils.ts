@@ -1,42 +1,69 @@
-import { clsx } from "clsx";
+// lib/utils.ts
 import { formatInTimeZone } from "date-fns-tz";
-import { isAfter, isBefore, compareAsc } from "date-fns";
-
-export function cn(...inputs: any[]) {
-  return clsx(inputs);
-}
+import { siteConfig } from "@/site.config";
 
 export type EventLike = {
-  startDate: Date;
-  endDate: Date;
   id: string;
   title: string;
   platform: string;
-  start: string;
-  end: string;
+  start: string; // ISO string with offset
+  end: string;   // ISO string with offset
   url: string;
   whatnot_embed_url?: string;
   status?: "upcoming" | "live" | "past";
+  // derived:
+  startDate: Date;
+  endDate: Date;
 };
 
+const TZ = siteConfig.timezone || "America/Chicago";
+
+/** Format a Date in a specific timezone with a date-fns pattern */
+export function formatDateInTZ(date: Date, pattern: string, tz: string = TZ) {
+  return formatInTimeZone(date, tz, pattern);
+}
+
+/** Parse /content/streams.json -> typed events with Date objects attached */
+export function parseEvents(raw: any[]): EventLike[] {
+  return (raw || []).map((e: any) => {
+    const startDate = new Date(e.start);
+    const endDate = new Date(e.end);
+    return {
+      ...e,
+      startDate,
+      endDate,
+    } as EventLike;
+  });
+}
+
+/** Next upcoming (or live) event from a list, or null if none */
+export function nextUpcomingEvent(events: EventLike[]): EventLike | null {
+  const now = Date.now();
+  const upcoming = events.filter((e) => e.endDate.getTime() >= now);
+  if (upcoming.length === 0) return null;
+  upcoming.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+  return upcoming[0] || null;
+}
+
+/** Predicates for filtering events */
 export function isUpcoming(e: EventLike): boolean {
   const now = Date.now();
   return e.endDate.getTime() >= now;
 }
-
 export function isPast(e: EventLike): boolean {
   const now = Date.now();
   return e.endDate.getTime() < now;
 }
-export function googleCalendarLink(e: any) {
-  // Google Calendar wants UTC timestamps like 20251212T020000Z
+
+/** Simple Google Calendar link (UTC timestamps) */
+export function googleCalendarLink(e: EventLike) {
   const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: e.title,
     dates: `${fmt(e.startDate)}/${fmt(e.endDate)}`,
     location: e.url,
-    details: `Stream on ${e.platform} — ${e.url}`
+    details: `Stream on ${e.platform} — ${e.url}`,
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
