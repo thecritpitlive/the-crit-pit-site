@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { siteConfig } from "@/site.config";
+import type { Route } from "next";
+
 
 const LINKS = [
   { href: "/about", label: "About" },
@@ -20,22 +22,27 @@ export default function Footer() {
         </div>
         <nav className="grid grid-cols-2 gap-2">
   {LINKS.map((l) =>
-    l.href.startsWith("/") ? (
-      <Link key={l.href} href={l.href} className="text-ink-300 hover:text-white">
-        {l.label}
-      </Link>
-    ) : (
-      <a
-        key={l.href}
-        href={l.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-ink-300 hover:text-white"
-      >
-        {l.label}
-      </a>
-    )
-  )}
+  l.href.startsWith("/") ? (
+    <Link
+      key={l.href}
+      href={l.href as Route}
+      className="text-ink-300 hover:text-white"
+    >
+      {l.label}
+    </Link>
+  ) : (
+    <a
+      key={l.href}
+      href={l.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-ink-300 hover:text-white"
+    >
+      {l.label}
+    </a>
+  )
+)}
+
 </nav>
 
         <div className="text-sm text-ink-400">
