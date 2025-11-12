@@ -1,40 +1,44 @@
 "use client";
+
 import Link from "next/link";
-import Logo from "@/components/logo";
-import ThemeToggle from "@/components/theme-toggle";
-import { useState } from "react";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import type { Route } from "next";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Logo } from "@/components/logo";
+import { NAV } from "@/config/nav";
 
-const NAV = [
-  { href: "/streams", label: "Streams" },
-  { href: "/links", label: "Links" },
-  { href: "/about", label: "About" },
-  { href: "/press", label: "Press Kit" },
-  { href: "/contact", label: "Contact" },
-];
-
-export default function Header() {
-  const [open, setOpen] = useState(false);
+export function Header() {
   return (
-    <header className="sticky top-0 z-40 backdrop-blur bg-ink-950/60 border-b border-ink-800">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+    <header className="w-full border-b border-ink-600 bg-ink-900/50 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Logo />
         <nav className="hidden md:flex items-center gap-6">
-          {NAV.map(i => <Link key={i.href} href={i.href} className="text-ink-200 hover:text-white">{i.label}</Link>)}
+          {NAV.map((i) =>
+            i.href.startsWith("/") ? (
+              <Link
+                key={i.href}
+                href={i.href as Route}
+                className="text-ink-200 hover:text-white"
+              >
+                {i.label}
+              </Link>
+            ) : (
+              <a
+                key={i.href}
+                href={i.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink-200 hover:text-white"
+              >
+                {i.label}
+              </a>
+            )
+          )}
           <ThemeToggle />
         </nav>
         <div className="md:hidden">
-          <Button variant="ghost" aria-label="Open menu" onClick={() => setOpen(o=>!o)}><Menu /></Button>
+          {/* Mobile nav or menu button could go here later */}
         </div>
       </div>
-      {open && (
-        <div className="md:hidden border-t border-ink-800 bg-ink-950">
-          <nav className="mx-auto max-w-6xl px-4 py-3 grid gap-2">
-            {NAV.map(i => <Link key={i.href} href={i.href} className="py-2">{i.label}</Link>)}
-          </nav>
-        </div>
-      )}
     </header>
   );
 }
