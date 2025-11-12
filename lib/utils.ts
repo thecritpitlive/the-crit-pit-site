@@ -19,7 +19,11 @@ export type EventLike = {
 const TZ = siteConfig.timezone || "America/Chicago";
 
 /** Format a Date in a specific timezone with a date-fns pattern */
-export function formatDateInTZ(date: Date, pattern: string, tz: string = TZ): string {
+export function formatDateInTZ(
+  date: Date,
+  pattern: string,
+  tz: string = TZ
+): string {
   return formatInTimeZone(date, tz, pattern);
 }
 
@@ -53,7 +57,21 @@ export function isPast(e: EventLike): boolean {
 
 /** Simple Google Calendar link (UTC timestamps) */
 export function googleCalendarLink(e: EventLike): string {
-  const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const fmt = (d: Date) =>
+    d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: e.title
+    text: e.title,
+    dates: `${fmt(e.startDate)}/${fmt(e.endDate)}`,
+    location: e.url,
+    details: `Stream on ${e.platform} — ${e.url}`,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+/** Tailwind-friendly className combiner */
+export function cn(
+  ...parts: Array<string | false | null | undefined>
+): string {
+  return parts.filter(Boolean).join(" ");
+}
