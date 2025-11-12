@@ -17,12 +17,13 @@ export type StreamEvent = {
 };
 
 // --- Simple helpers used by Events page ---
-export function isUpcoming(date: Date): boolean {
-  return new Date(date).getTime() > Date.now();
+// --- Simple helpers used by Events page ---
+export function isUpcoming(e: { startDate: Date }): boolean {
+  return e.startDate.getTime() > Date.now();
 }
 
-export function isPast(date: Date): boolean {
-  return new Date(date).getTime() < Date.now();
+export function isPast(e: { startDate: Date }): boolean {
+  return e.startDate.getTime() < Date.now();
 }
 
 // --- Date formatting in a specific timezone ---
